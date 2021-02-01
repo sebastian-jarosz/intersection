@@ -25,16 +25,30 @@ class ResultView(generic.DetailView):
         first_segment = segments_pair.get_first_segment()
         second_segment = segments_pair.get_second_segment()
 
-        intersection_amount, intersection_array = is_pair_intersecting(segments_pair)
-
-        print(intersection_amount)
-        print(intersection_array)
+        # Set context data about intersection
+        self.set_intersection_data(context)
 
         context['first_segment'] = first_segment
         context['second_segment'] = second_segment
-        context['intersection_amount'] = intersection_amount
 
         return context
+
+    def set_intersection_data(self, context):
+        segments_pair = self.get_object()
+        intersection_amount, intersection_array = is_pair_intersecting(segments_pair)
+
+        if intersection_amount == 1:
+            context['intersection_x'] = intersection_array[0]
+            context['intersection_y'] = intersection_array[1]
+        elif intersection_amount == 2:
+            intersection_first_point = intersection_array[0]
+            intersection_second_point = intersection_array[1]
+            context['intersection_first_point_x'] = intersection_first_point[0]
+            context['intersection_first_point_y'] = intersection_first_point[1]
+            context['intersection_second_point_x'] = intersection_second_point[0]
+            context['intersection_second_point_y'] = intersection_second_point[1]
+
+        context['intersection_amount'] = intersection_amount
 
 
 def check_intersection(request):
@@ -53,7 +67,7 @@ def check_intersection(request):
     # increment range by 2
     for i in range(0, len(points_arr), 2):
         point1 = points_arr[i]
-        point2 = points_arr[i+1]
+        point2 = points_arr[i + 1]
 
         segment = Segment.objects.create(point1=point1, point2=point2)
         segments_arr.append(segment)

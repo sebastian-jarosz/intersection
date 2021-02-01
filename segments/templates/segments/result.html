@@ -2,9 +2,17 @@
 <h2>{{ segments_pair.id }}</h2>
 
 <ul>
-
     <li>Pierwszy odcinek - {{ first_segment }}</li>
     <li>Drugi odcinek - {{ second_segment }}</li>
     <li>Ilość przecięć - {{ intersection_amount }}</li>
-
 </ul>
+
+{% if intersection_amount == 0 %}
+  <h2>Przeciec 0</h2>
+{% endif %}
+{% if intersection_amount == 1 %}
+  <h2>Przeciec 1</h2>
+{% endif %}
+{% if intersection_amount == 2 %}
+  <h2>Przeciec 2</h2>
+{% endif %}
