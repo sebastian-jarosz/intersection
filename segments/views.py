@@ -1,6 +1,10 @@
+from django.shortcuts import render
+from .models import Point, Segment, SegmentsPair
 from django.views import generic
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+
+FIELD_PAIRS = [['ax', 'ay'], ['bx', 'by'], ['cx', 'cy'], ['dx', 'dy']]
 
 
 class IndexView(generic.TemplateView):
@@ -12,12 +16,48 @@ class ResultView(generic.DetailView):
 
 
 def check_intersection(request):
-    print(request.POST['ax'])
-    print(request.POST['ay'])
-    print(request.POST['bx'])
-    print(request.POST['by'])
-    print(request.POST['cx'])
-    print(request.POST['cy'])
-    print(request.POST['dx'])
-    print(request.POST['dy'])
+    # Check if all fields are filled
+    if not validate_fields(request):
+        return render(request, 'segments/index.html', {
+            'error_message': "Proszę wypełnić wszystkie pola.",
+        })
+
+    points_arr = []
+    for field_pair in FIELD_PAIRS:
+        point_from_request = get_point_from_request(field_pair, request)
+        points_arr.append(point_from_request)
+
+    segments_arr = []
+    # increment range by 2
+    for i in range(0, len(points_arr), 2):
+        point1 = points_arr[i]
+        point2 = points_arr[i+1]
+
+        segment = Segment.objects.create(point1=point1, point2=point2)
+        segments_arr.append(segment)
+
+    segment1 = segments_arr[0]
+    segment2 = segments_arr[1]
+    segments_pair = SegmentsPair.objects.create(segment1=segment1, segment2=segment2)
+
+    print(segments_pair)
+
     return HttpResponseRedirect(reverse('segments:index'))
+
+
+def validate_fields(request):
+    for field_pair in FIELD_PAIRS:
+        x = request.POST[field_pair[0]]
+        y = request.POST[field_pair[1]]
+
+        if x == "" or y == "":
+            return False
+
+    return True
+
+
+def get_point_from_request(field_pair, request):
+    x = float(request.POST[field_pair[0]])
+    y = float(request.POST[field_pair[1]])
+
+    return Point.objects.create(x_coordinate=x, y_coordinate=y)
