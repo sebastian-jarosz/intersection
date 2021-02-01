@@ -43,10 +43,10 @@ class SegmentsPair(models.Model):
     intersection_array = None
 
     def get_first_segment(self):
-        return str(self.segment1)
+        return self.segment1
 
     def get_second_segment(self):
-        return str(self.segment2)
+        return self.segment2
 
     def __str__(self):
         return "Segment 1:\n" + str(self.segment1) + "\nSegment 2:\n" + str(self.segment2)
