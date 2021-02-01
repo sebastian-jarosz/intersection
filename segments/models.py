@@ -32,7 +32,13 @@ class Segment(models.Model):
     def are_both_points_equal(self):
         return np.array_equal(self.point1.get_as_array(), self.point2.get_as_array())
 
+    def __str__(self):
+        return "Point 1: " + str(self.get_first_point()) + " Point 2: " + str(self.get_second_point())
+
 
 class SegmentsPair(models.Model):
     segment1 = models.ForeignKey(Segment, related_name='segment_1', on_delete=models.CASCADE)
     segment2 = models.ForeignKey(Segment, related_name='segment_2', on_delete=models.CASCADE)
+
+    def __str__(self):
+        return "Segment 1:\n" + str(self.segment1) + "\nSegment 2:\n" + str(self.segment2)
