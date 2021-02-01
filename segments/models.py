@@ -39,6 +39,14 @@ class Segment(models.Model):
 class SegmentsPair(models.Model):
     segment1 = models.ForeignKey(Segment, related_name='segment_1', on_delete=models.CASCADE)
     segment2 = models.ForeignKey(Segment, related_name='segment_2', on_delete=models.CASCADE)
+    intersection_amount = None
+    intersection_array = None
+
+    def get_first_segment(self):
+        return str(self.segment1)
+
+    def get_second_segment(self):
+        return str(self.segment2)
 
     def __str__(self):
         return "Segment 1:\n" + str(self.segment1) + "\nSegment 2:\n" + str(self.segment2)

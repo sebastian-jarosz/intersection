@@ -3,6 +3,7 @@ from .models import Point, Segment, SegmentsPair
 from django.views import generic
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+from .service import is_pair_intersecting
 
 FIELD_PAIRS = [['ax', 'ay'], ['bx', 'by'], ['cx', 'cy'], ['dx', 'dy']]
 
@@ -12,7 +13,28 @@ class IndexView(generic.TemplateView):
 
 
 class ResultView(generic.DetailView):
+    model = SegmentsPair
+    context_object_name = 'segments_pair'
     template_name = 'segments/result.html'
+
+    def get_context_data(self, **kwargs):
+        segments_pair = self.get_object()
+
+        # Call the base implementation first to get a context
+        context = super().get_context_data(**kwargs)
+        first_segment = segments_pair.get_first_segment()
+        second_segment = segments_pair.get_second_segment()
+
+        intersection_amount, intersection_array = is_pair_intersecting(segments_pair)
+
+        print(intersection_amount)
+        print(intersection_array)
+
+        context['first_segment'] = first_segment
+        context['second_segment'] = second_segment
+        context['intersection_amount'] = intersection_amount
+
+        return context
 
 
 def check_intersection(request):
@@ -42,7 +64,7 @@ def check_intersection(request):
 
     print(segments_pair)
 
-    return HttpResponseRedirect(reverse('segments:index'))
+    return HttpResponseRedirect(reverse('segments:result', args=(segments_pair.id,)))
 
 
 def validate_fields(request):

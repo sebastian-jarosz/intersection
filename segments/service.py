@@ -7,6 +7,19 @@ def are_intersecting_boolean(segment_ab, segment_cd):
     return True if int_points_amount > 0 else False
 
 
+def is_pair_intersecting_boolean(segments_pair):
+    segment_ab = segments_pair.get_first_segment()
+    segment_cd = segments_pair.get_second_segment()
+    int_points_amount, int_array = are_intersecting(segment_ab, segment_cd)
+    return True if int_points_amount > 0 else False
+
+
+def is_pair_intersecting(segments_pair):
+    segment_ab = segments_pair.get_first_segment()
+    segment_cd = segments_pair.get_second_segment()
+    return are_intersecting(segment_ab, segment_cd)
+
+
 # Main method to check segments intersection
 # Return amount of intersections (Ex. 1 if only one intersection point,
 # 2 if intersection is a segment, 0 if no intersection) and
