@@ -1,18 +1,29 @@
-<h1>Rezultaty</h1>
-<h2>{{ segments_pair.id }}</h2>
+{% load static %}
+<html>
+    <head>
+        <title>Rezultaty</title>
+    </head>
+    <body>
+        <h1>Rezultaty</h1>
+        <h2>{{ segments_pair.id }}</h2>
 
-<ul>
-    <li>Pierwszy odcinek - {{ first_segment }}</li>
-    <li>Drugi odcinek - {{ second_segment }}</li>
-    <li>Ilość przecięć - {{ intersection_amount }}</li>
-</ul>
+        <ul>
+            <li>Pierwszy odcinek - {{ first_segment }}</li>
+            <li>Drugi odcinek - {{ second_segment }}</li>
+            <li>Ilość przecięć - {{ intersection_amount }}</li>
+        </ul>
 
-{% if intersection_amount == 0 %}
-  <h2>Przeciec 0</h2>
-{% endif %}
-{% if intersection_amount == 1 %}
-  <h2>Przeciec 1</h2>
-{% endif %}
-{% if intersection_amount == 2 %}
-  <h2>Przeciec 2</h2>
-{% endif %}
+        <canvas id="resultChart" width="500" height="500"></canvas>
+
+        <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.0.min.js"></script>
+        <script type="text/javascript" src="{% static 'js/Chart.min.js' %}"></script>
+        <script type="text/javascript">
+            $.get('{% url "segments:result_json" pk %}', function(data) {
+                var ctx = $("#resultChart").get(0).getContext("2d");
+                new Chart(ctx, {
+                    type: 'line', data: data
+                });
+            });
+        </script>
+    </body>
+</html>

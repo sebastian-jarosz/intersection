@@ -1,4 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
+from django.views.generic import TemplateView
+
 from .models import Point, Segment, SegmentsPair
 from django.views import generic
 from django.http import HttpResponseRedirect
@@ -13,90 +15,66 @@ class IndexView(generic.TemplateView):
     template_name = 'segments/index.html'
 
 
-class ChartResultView(BaseLineChartView):
-    def get_labels(self):
-        # Return labels for x axis
-        return None
+def set_intersection_data(context, segments_pair):
+    intersection_amount, intersection_array = is_pair_intersecting(segments_pair)
 
-    def get_providers(self):
-        # Return names of datasets.
-        return None
+    if intersection_amount == 1:
+        context['intersection_x'] = intersection_array[0]
+        context['intersection_y'] = intersection_array[1]
+    elif intersection_amount == 2:
+        intersection_first_point = intersection_array[0]
+        intersection_second_point = intersection_array[1]
+        context['intersection_first_point_x'] = intersection_first_point[0]
+        context['intersection_first_point_y'] = intersection_first_point[1]
+        context['intersection_second_point_x'] = intersection_second_point[0]
+        context['intersection_second_point_y'] = intersection_second_point[1]
 
-    def get_data(self):
-        # Return datasets to plot
-        return None
-
-    def get_context_data(self, **kwargs):
-        segments_pair = self.get_object()
-
-        # Call the base implementation first to get a context
-        context = super().get_context_data(**kwargs)
-        first_segment = segments_pair.get_first_segment()
-        second_segment = segments_pair.get_second_segment()
-
-        # Set context data about intersection
-        self.set_intersection_data(context)
-
-        context['first_segment'] = first_segment
-        context['second_segment'] = second_segment
-
-        return context
-
-    def set_intersection_data(self, context):
-        segments_pair = self.get_object()
-        intersection_amount, intersection_array = is_pair_intersecting(segments_pair)
-
-        if intersection_amount == 1:
-            context['intersection_x'] = intersection_array[0]
-            context['intersection_y'] = intersection_array[1]
-        elif intersection_amount == 2:
-            intersection_first_point = intersection_array[0]
-            intersection_second_point = intersection_array[1]
-            context['intersection_first_point_x'] = intersection_first_point[0]
-            context['intersection_first_point_y'] = intersection_first_point[1]
-            context['intersection_second_point_x'] = intersection_second_point[0]
-            context['intersection_second_point_y'] = intersection_second_point[1]
-
-        context['intersection_amount'] = intersection_amount
+    context['intersection_amount'] = intersection_amount
 
 
-class ResultView(generic.DetailView):
-    model = SegmentsPair
-    context_object_name = 'segments_pair'
+# Provides only data for chart
+class ChartResultJSONView(BaseLineChartView):
     template_name = 'segments/result.html'
 
     def get_context_data(self, **kwargs):
-        segments_pair = self.get_object()
+        context = super(BaseLineChartView, self).get_context_data(**kwargs)
+        print(context)
+        return context
 
+    def get_labels(self):
+        # Return labels for x axis
+        return []
+
+    def get_providers(self):
+        # Return names of datasets.
+        return []
+
+    def get_data(self):
+        # Return datasets to plot
+        return []
+
+
+# Provides data for result page
+class ChartResultView(TemplateView):
+    template_name = "segments/result.html"
+
+    def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
         context = super().get_context_data(**kwargs)
+        segments_pair_id = context['pk']
+
+        segments_pair = get_object_or_404(SegmentsPair, pk=segments_pair_id)
+
         first_segment = segments_pair.get_first_segment()
         second_segment = segments_pair.get_second_segment()
 
         # Set context data about intersection
-        self.set_intersection_data(context)
+        set_intersection_data(context, segments_pair)
 
         context['first_segment'] = first_segment
         context['second_segment'] = second_segment
 
         return context
-
-    def set_intersection_data(self, context):
-        segments_pair = self.get_object()
-        intersection_amount, intersection_array = is_pair_intersecting(segments_pair)
-
-        if intersection_amount == 1:
-            context['intersection_x'] = intersection_array[0]
-            context['intersection_y'] = intersection_array[1]
-        elif intersection_amount == 2:
-            intersection_first_point = intersection_array[0]
-            intersection_second_point = intersection_array[1]
-            context['intersection_first_point_x'] = intersection_first_point[0]
-            context['intersection_first_point_y'] = intersection_first_point[1]
-            context['intersection_second_point_x'] = intersection_second_point[0]
-            context['intersection_second_point_y'] = intersection_second_point[1]
-
-        context['intersection_amount'] = intersection_amount
 
 
 def check_intersection(request):
