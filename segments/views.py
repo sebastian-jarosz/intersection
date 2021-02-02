@@ -4,12 +4,60 @@ from django.views import generic
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from .service import is_pair_intersecting
+from chartjs.views.lines import BaseLineChartView
 
 FIELD_PAIRS = [['ax', 'ay'], ['bx', 'by'], ['cx', 'cy'], ['dx', 'dy']]
 
 
 class IndexView(generic.TemplateView):
     template_name = 'segments/index.html'
+
+
+class ChartResultView(BaseLineChartView):
+    def get_labels(self):
+        # Return labels for x axis
+        return None
+
+    def get_providers(self):
+        # Return names of datasets.
+        return None
+
+    def get_data(self):
+        # Return datasets to plot
+        return None
+
+    def get_context_data(self, **kwargs):
+        segments_pair = self.get_object()
+
+        # Call the base implementation first to get a context
+        context = super().get_context_data(**kwargs)
+        first_segment = segments_pair.get_first_segment()
+        second_segment = segments_pair.get_second_segment()
+
+        # Set context data about intersection
+        self.set_intersection_data(context)
+
+        context['first_segment'] = first_segment
+        context['second_segment'] = second_segment
+
+        return context
+
+    def set_intersection_data(self, context):
+        segments_pair = self.get_object()
+        intersection_amount, intersection_array = is_pair_intersecting(segments_pair)
+
+        if intersection_amount == 1:
+            context['intersection_x'] = intersection_array[0]
+            context['intersection_y'] = intersection_array[1]
+        elif intersection_amount == 2:
+            intersection_first_point = intersection_array[0]
+            intersection_second_point = intersection_array[1]
+            context['intersection_first_point_x'] = intersection_first_point[0]
+            context['intersection_first_point_y'] = intersection_first_point[1]
+            context['intersection_second_point_x'] = intersection_second_point[0]
+            context['intersection_second_point_y'] = intersection_second_point[1]
+
+        context['intersection_amount'] = intersection_amount
 
 
 class ResultView(generic.DetailView):
