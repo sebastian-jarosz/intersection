@@ -1,29 +1,58 @@
 {% load static %}
 <html>
-    <head>
-        <title>Rezultaty</title>
-    </head>
-    <body>
-        <h1>Rezultaty</h1>
-        <h2>{{ segments_pair.id }}</h2>
+<head>
+    <title>Rezultaty</title>
+</head>
+<body>
+    <h1>Rezultaty</h1>
+    <h2>{{ segments_pair.id }}</h2>
 
-        <ul>
-            <li>Pierwszy odcinek - {{ first_segment }}</li>
-            <li>Drugi odcinek - {{ second_segment }}</li>
-            <li>Ilość przecięć - {{ intersection_amount }}</li>
-        </ul>
+    <ul>
+        <li>Pierwszy odcinek - {{ first_segment }}</li>
+        <li>Drugi odcinek - {{ second_segment }}</li>
+        <li>Ilość przecięć - {{ intersection_amount }}</li>
+    </ul>
 
         <canvas id="resultChart" width="500" height="500"></canvas>
 
-        <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.0.min.js"></script>
-        <script type="text/javascript" src="{% static 'js/Chart.min.js' %}"></script>
-        <script type="text/javascript">
-            $.get('{% url "segments:result_json" pk %}', function(data) {
-                var ctx = $("#resultChart").get(0).getContext("2d");
-                new Chart(ctx, {
-                    type: 'line', data: data
-                });
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.10.0.min.js"></script>
+    <script type="text/javascript" src="{% static 'js/Chart.min.js' %}"></script>
+    <script type="text/javascript">
+        $.get('{% url "segments:result_json" pk %}', function(data) {
+            var ctx = $("#resultChart").get(0).getContext("2d");
+            new Chart(document.getElementById("resultChart"), {
+                type: 'scatter',
+                data: data,
+                options: {
+                    scales: {
+                        xAxes: [{
+                            drawBorder: false,
+                            gridLines: {
+                                lineWidth: 0.5,
+                                zeroLineWidth: 3
+                            },
+                            ticks: {
+                                suggestedMax: 5,
+                                min: -5,
+                                stepSize: 0.5
+                            }
+                        }],
+                        yAxes: [{
+                            drawBorder: false,
+                            gridLines: {
+                                lineWidth: 0.5,
+                                zeroLineWidth: 3
+                            },
+                            ticks: {
+                                suggestedMax: 5,
+                                min: -5,
+                                stepSize: 0.5
+                            }
+                        }],
+                    }
+                }
             });
-        </script>
-    </body>
+        });
+    </script>
+</body>
 </html>

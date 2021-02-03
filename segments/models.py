@@ -23,6 +23,22 @@ class Segment(models.Model):
         y2 = second_point[1]
         return np.array([x2 - x1, y2 - y1])
 
+    def get_as_json_array(self):
+        first_point = self.point1.get_as_array()
+        second_point = self.point2.get_as_array()
+        x1 = first_point[0]
+        y1 = first_point[1]
+        x2 = second_point[0]
+        y2 = second_point[1]
+        return [{
+                    'x': x1,
+                    'y': y1
+                },
+                {
+                    'x': x2,
+                    'y': y2
+                }]
+
     def get_first_point(self):
         return self.point1.get_as_array()
 
