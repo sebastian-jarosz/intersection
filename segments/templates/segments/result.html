@@ -10,7 +10,14 @@
     <ul>
         <li>Pierwszy odcinek - {{ first_segment }}</li>
         <li>Drugi odcinek - {{ second_segment }}</li>
-        <li>Ilość przecięć - {{ intersection_amount }}</li>
+
+        {% if intersection_amount == 1 %}
+        <li>Jedno miejsce przecięcia</li>
+        {% elif intersection_amount == 2 %}
+        <li>Odcinki mają część wspólną</li>
+        {% else %}
+        <li>Brak przecięć</li>
+        {% endif %}
     </ul>
 
         <canvas id="resultChart" width="500" height="500"></canvas>

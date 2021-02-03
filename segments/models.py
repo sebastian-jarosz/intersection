@@ -49,7 +49,7 @@ class Segment(models.Model):
         return np.array_equal(self.point1.get_as_array(), self.point2.get_as_array())
 
     def __str__(self):
-        return "Point 1: " + str(self.get_first_point()) + " Point 2: " + str(self.get_second_point())
+        return "Punkt 1: " + str(self.get_first_point()) + " Punkt 2: " + str(self.get_second_point())
 
 
 class SegmentsPair(models.Model):
@@ -65,4 +65,4 @@ class SegmentsPair(models.Model):
         return self.segment2
 
     def __str__(self):
-        return "Segment 1:\n" + str(self.segment1) + "\nSegment 2:\n" + str(self.segment2)
+        return "Odcinek 1:\n" + str(self.segment1) + "\nOdcinek 2:\n" + str(self.segment2)
