@@ -69,3 +69,19 @@ class IntersectionTests(TestCase):
         print(int_array[1])
         self.assertEqual(int_points_amount, 2)
 
+    def test_intersection_segments(self):
+        segment1 = create_segment_from_coordinates(1, 2, 3, 4)
+        segment2 = create_segment_from_coordinates(2, 3, 4, 5)
+        int_points_amount, int_array = are_intersecting(segment1, segment2)
+        print(int_array[0])
+        print(int_array[1])
+        self.assertEqual(int_points_amount, 2)
+
+    def test_intersection_segments2(self):
+        segment1 = create_segment_from_coordinates(0, 0, 2, 0)
+        segment2 = create_segment_from_coordinates(1, 0, 3, 0)
+        int_points_amount, int_array = are_intersecting(segment1, segment2)
+        print(int_array[0])
+        print(int_array[1])
+        self.assertEqual(int_points_amount, 2)
+
