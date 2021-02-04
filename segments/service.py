@@ -54,7 +54,7 @@ def are_intersecting(segment_ab, segment_cd):
     # Segments are collinear - if intersecting return amount 2 and points (segment begin and segment end)
     # else amount 0 and None
     if cross_ab_cd == 0 and cross_c_sub_a_ab == 0:
-        int_segment = calc_int_segment(point_a, point_c, vector_ab, vector_cd)
+        int_segment = calc_int_segment(segment_ab, segment_cd, vector_ab, vector_cd)
         int_points_amount = 2 if int_segment is not None else 0
         return int_points_amount, int_segment
     # Segments are not parallel and have only one intersection point
@@ -126,7 +126,13 @@ def calc_u(point_c, point_a, vector_ab, vector_cd):
 
 # Calculate intersection segment in case of collinear segments
 # If intersecting return [begin_of_int_segment, end_of_int_segment] else None
-def calc_int_segment(point_a, point_c, vector_ab, vector_cd):
+def calc_int_segment(segment_ab, segment_cd, vector_ab, vector_cd):
+    point_a = segment_ab.get_first_point()
+    point_b = segment_ab.get_second_point()
+    point_c = segment_cd.get_first_point()
+    point_d = segment_cd.get_second_point()
+    all_points = [point_a, point_b, point_c, point_d]
+
     # Vector AB * Vector AB - * represents DOT PRODUCT
     dot_ab_ab = np.dot(vector_ab, vector_ab)
     # Vector CD * Vector AB - * represents DOT PRODUCT
@@ -137,20 +143,43 @@ def calc_int_segment(point_a, point_c, vector_ab, vector_cd):
 
     # If vectors point in opposite directions (dot_cd_ab < 0) we are checking [t1, t0] interval
     # in other case we are checking [t0, t1] interval
-    if dot_cd_ab < 0:
-        if 0 <= t1 <= 1 and 0 <= t0 <= 1 and t1 < t0:
-            begin_of_int_segment = point_a + np.dot(t1, vector_ab)
-            end_of_int_segment = point_a + np.dot(t0, vector_ab)
-            return [begin_of_int_segment, end_of_int_segment]
-        else:
-            return None
+    # If the interval between t0 and t1 (or t1 and t0) intersects the interval [0, 1]
+    # then the line segments are collinear and overlapping; otherwise they are collinear and disjoint.
+    if dot_cd_ab < 0 <= t0 and t1 <= 1:
+        return get_intersection_segment_from_points(all_points)
+    elif t0 <= 1 and 0 <= t1:
+        return get_intersection_segment_from_points(all_points)
     else:
-        if 0 <= t0 <= 1 and 0 <= t1 <= 1 and t0 < t1:
-            begin_of_int_segment = point_a + np.dot(t0, vector_ab)
-            end_of_int_segment = point_a + np.dot(t1, vector_ab)
-            return [begin_of_int_segment, end_of_int_segment]
-        else:
-            return None
+        return None
+
+
+def get_intersection_segment_from_points(all_points):
+    point_min_x = None
+    point_max_x = None
+
+    # Get points with MIN_X and MAX_X
+    for point in all_points:
+        x = point[0]
+        if point_min_x is None or x < point_min_x[0]:
+            point_min_x = point
+        if point_max_x is None or x > point_max_x[0]:
+            point_max_x = point
+
+    int_segment_points = []
+    # From all points get only points which are not matching MIN_X, MAX_X
+    for point in all_points:
+        if not (np.array_equal(point, point_min_x) or np.array_equal(point, point_max_x)):
+            int_segment_points.append(point)
+
+    # Special Case - Both segments are equal
+    if len(int_segment_points) == 0:
+        int_segment_points.extend([point_min_x, point_max_x])
+    # Special Case - Beginning or Ending of both segments are equal
+    elif len(int_segment_points) == 1:
+        x = int_segment_points[0][1]
+        int_segment_points.append(point_min_x if x > point_min_x[0] else point_max_x)
+
+    return int_segment_points
 
 
 # Calculate intersection point - return point
