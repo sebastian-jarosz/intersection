@@ -195,10 +195,7 @@ def calc_int_point(point_a, point_c, t, u, vector_ab, vector_cd):
     intersection_point2 = point_c + np.dot(u, vector_cd)
 
     # There should not be a situation where this two points are not equal
-    if np.array_equal(intersection_point1, intersection_point2):
-        return intersection_point1
-    else:
-        return None
+    return intersection_point1
 
 
 def get_vector_from_two_points(point1, point2):
