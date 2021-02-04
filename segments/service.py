@@ -180,8 +180,8 @@ def get_intersection_segment_from_points(all_points):
         int_segment_points.extend([point_min_checked_coordinate, point_max_checked_coordinate])
     # Special Case - Beginning or Ending of both segments are equal
     elif len(int_segment_points) == 1:
-        x = int_segment_points[0][1]
-        int_segment_points.append(point_min_checked_coordinate if x > point_min_checked_coordinate[0] else point_max_checked_coordinate)
+        coordinate_value = int_segment_points[0][coordinate_to_check]
+        int_segment_points.append(point_min_checked_coordinate if coordinate_value > point_min_checked_coordinate[0] else point_max_checked_coordinate)
 
     return int_segment_points
 
