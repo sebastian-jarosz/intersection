@@ -161,7 +161,7 @@ def get_intersection_segment_from_points(all_points):
     point_min_checked_coordinate = None
     point_max_checked_coordinate = None
 
-    # Get points with MIN_X and MAX_X
+    # Get points with MIN_coordinate and MAX_coordinate
     for point in all_points:
         coordinate_value = point[coordinate_to_check]
         if point_min_checked_coordinate is None or coordinate_value < point_min_checked_coordinate[coordinate_to_check]:
@@ -170,7 +170,7 @@ def get_intersection_segment_from_points(all_points):
             point_max_checked_coordinate = point
 
     int_segment_points = []
-    # From all points get only points which are not matching MIN_X, MAX_X
+    # From all points get only points which are not matching MIN_coordinate, MAX_coordinate
     for point in all_points:
         if not (np.array_equal(point, point_min_checked_coordinate) or np.array_equal(point, point_max_checked_coordinate)):
             int_segment_points.append(point)
