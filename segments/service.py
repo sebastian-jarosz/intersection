@@ -154,30 +154,34 @@ def calc_int_segment(segment_ab, segment_cd, vector_ab, vector_cd):
 
 
 def get_intersection_segment_from_points(all_points):
-    point_min_x = None
-    point_max_x = None
+    dont_check_by_x = all_points[0][0] == all_points[1][0] == all_points[2][0] == all_points[3][0]
+
+    coordinate_to_check = 0 if not dont_check_by_x else 1
+
+    point_min_checked_coordinate = None
+    point_max_checked_coordinate = None
 
     # Get points with MIN_X and MAX_X
     for point in all_points:
-        x = point[0]
-        if point_min_x is None or x < point_min_x[0]:
-            point_min_x = point
-        if point_max_x is None or x > point_max_x[0]:
-            point_max_x = point
+        coordinate_value = point[coordinate_to_check]
+        if point_min_checked_coordinate is None or coordinate_value < point_min_checked_coordinate[coordinate_to_check]:
+            point_min_checked_coordinate = point
+        if point_max_checked_coordinate is None or coordinate_value > point_max_checked_coordinate[coordinate_to_check]:
+            point_max_checked_coordinate = point
 
     int_segment_points = []
     # From all points get only points which are not matching MIN_X, MAX_X
     for point in all_points:
-        if not (np.array_equal(point, point_min_x) or np.array_equal(point, point_max_x)):
+        if not (np.array_equal(point, point_min_checked_coordinate) or np.array_equal(point, point_max_checked_coordinate)):
             int_segment_points.append(point)
 
     # Special Case - Both segments are equal
     if len(int_segment_points) == 0:
-        int_segment_points.extend([point_min_x, point_max_x])
+        int_segment_points.extend([point_min_checked_coordinate, point_max_checked_coordinate])
     # Special Case - Beginning or Ending of both segments are equal
     elif len(int_segment_points) == 1:
         x = int_segment_points[0][1]
-        int_segment_points.append(point_min_x if x > point_min_x[0] else point_max_x)
+        int_segment_points.append(point_min_checked_coordinate if x > point_min_checked_coordinate[0] else point_max_checked_coordinate)
 
     return int_segment_points
 
