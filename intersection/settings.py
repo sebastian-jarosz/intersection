@@ -26,7 +26,7 @@ SECRET_KEY = '9#xh^*rr3xox^6j_vti)618l%slvsegm2w6^#+1z1u44)=(2k!'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['intersection-master.herokuapp.com', '127.0.0.1', 'localhost']
 
 
 # Application definition
