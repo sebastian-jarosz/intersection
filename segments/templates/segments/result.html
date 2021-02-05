@@ -78,8 +78,8 @@ h2, h3 {
     <div style="top:60px; margin:auto; width:1000px; height: 1000px;">
         <canvas id="resultChart" width="500" height="500"></canvas>
 
-    <script type="text/javascript" src="https://code.jquery.com/jquery-1.10.0.min.js"></script>
-    <script type="text/javascript" src="{% static 'js/Chart.min.js' %}"></script>
+    <script type="application/javascript" src="https://code.jquery.com/jquery-1.10.0.min.js"></script>
+    <script type="application/javascript" src="{% static 'js/Chart.min.js' %}"></script>
     <script type="text/javascript">
         $.get('{% url "segments:result_json" pk %}', function(data) {
             var ctx = $("#resultChart").get(0).getContext("2d");
