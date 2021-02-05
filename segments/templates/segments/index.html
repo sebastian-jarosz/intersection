@@ -1,35 +1,140 @@
-<h1>Czy odcinki się przecinają?</h1>
+<style>
 
-{% if error_message %}
-<p><strong>{{ error_message }}</strong></p>
-{% endif %}
+body {
+	background-color: #F9F9F9;
+}
+#form-styles{
+	width:1000px;
+	margin:auto;
+	margin-top: 50px;
+	font-family: Montserrat, Calibri, Sans-serif !important;
+	background: #fff;
+}
+#label-class{
+	width:100%;
+	height: 100px;
+	line-height: 100px;
+	background: #13E7E2;
+	background: -webkit-linear-gradient(left, #13E7E2, #09BDB8);
+	background: -moz-linear-gradient(left, #13E7E2, #09BDB8);
+	background: linear-gradient(to right, #13E7E2, #09BDB8);
+	color: #fff;
+	text-align: center;
+	border-radius: 10px 10px 0 0;
+}
+#form-content{
+	padding: 0 20px 20px 20px;
+	line-height: 30px;
+}
 
+h3 {
+	color: #09BDB8;
+}
+input {
+	padding: 12px 16px 12px 39px;
+    height: 50px;
+	text-align:center;
+    font-size: 14px;
+    color: #2b2a2a;
+    border: none;
+    border-bottom: 2px solid #ccc;
+    border-radius: 0;
+    box-shadow: none;
+    margin-bottom: 15px;
+	font-family: Montserrat, Calibri, Sans-serif !important;
+	width: 400px;
+}
+input:focus {
+    outline: none;
+    border-bottom: 2px solid #09BDB8;
+    border-radius: 0;
+    box-shadow: none;
+}
+/*Chrome*/
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+form label{
+	padding-right:50px;
+}
+form submit{
+	font-weight: 600px;
+	padding: 20px 0;
+}
+.btn{
+	font-size: 14px;
+	float:center;
+	backgrount: #fff;
+}
+#form-footer{
+	font-family: Roboto, Montserrat, Calibri !important;
+	font-size: 12px;
+	text-align:center;
+	line-height: 12px;
+	background-color: #F9F9F9;
+	padding-top:20px;
+}
+.catch-error{
+    padding-left: 20px;
+    color: #B51212;
+}
+</style>
+
+<div id="form-styles">
+    <div id="label-class">
+        <h1>Czy odcinki się przecinają?</h1>
+    </div>
+
+    {% if error_message %}
+    <p class="catch-error"><strong>{{ error_message }}</strong></p>
+    {% endif %}
+
+<div id="form-content">
 <form action="{% url 'segments:check_intersection'%}" method="post">
 {% csrf_token %}
     <h3>Pierwszy odcinek</h3>
     <br>
-    <label for="ax">Punkt A - współrzędna x</label>
-    <input type="number" step="0.01" name="ax" id="ax">
-    <label for="by">Punkt A - współrzędna y</label>
-    <input type="number" step="0.01" name="ay" id="ay">
+    <label>Punkt A</label>
+<!--    <label for="ax">Punkt A - współrzędna x</label>-->
+    <input type="number" step="0.01" name="ax" id="ax" placeholder="Punkt A - współrzędna X">
+<!--    <label for="by">Punkt A - współrzędna y</label>-->
+    <input type="number" step="0.01" name="ay" id="ay" placeholder="Punkt A - współrzędna Y">
     <br>
-    <label for="ax">Punkt B - współrzędna x</label>
-    <input type="number" step="0.01" name="bx" id="bx">
-    <label for="by">Punkt B - współrzędna y</label>
-    <input type="number" step="0.01" name="by" id="by">
+    <label>Punkt B</label>
+<!--    <label for="ax">Punkt B - współrzędna x</label>-->
+    <input type="number" step="0.01" name="bx" id="bx" placeholder="Punkt B - współrzędna X">
+<!--    <label for="by">Punkt B - współrzędna y</label>-->
+    <input type="number" step="0.01" name="by" id="by" placeholder="Punkt B - współrzędna Y">
     <br>
 
     <h3>Drugi odcinek</h3>
     <br>
-    <label for="cx">Punkt A - współrzędna x</label>
-    <input type="number" step="0.01" name="cx" id="cx">
-    <label for="cy">Punkt A - współrzędna y</label>
-    <input type="number" step="0.01" name="cy" id="cy">
+    <label>Punkt C</label>
+<!--    <label for="cx">Punkt A - współrzędna x</label>-->
+    <input type="number" step="0.01" name="cx" id="cx" placeholder="Punkt C - współrzędna X">
+<!--    <label for="cy">Punkt A - współrzędna y</label>-->
+    <input type="number" step="0.01" name="cy" id="cy" placeholder="Punkt C - współrzędna Y">
     <br>
-    <label for="dx">Punkt B - współrzędna x</label>
-    <input type="number" step="0.01" name="dx" id="dx">
-    <label for="dy">Punkt B - współrzędna y</label>
-    <input type="number" step="0.01" name="dy" id="dy">
+    <label>Punkt D</label>
+<!--    <label for="dx">Punkt B - współrzędna x</label>-->
+    <input type="number" step="0.01" name="dx" id="dx" placeholder="Punkt D - współrzędna X">
+<!--    <label for="dy">Punkt B - współrzędna y</label>-->
+    <input type="number" step="0.01" name="dy" id="dy" placeholder="Punkt D - współrzędna Y">
     <br>
-<input type="submit" value="Sprawdź czy odcinki się przecinają!">
+<div width="100%">
+<input type="submit" value="Sprawdź czy odcinki się przecinają!" style="margin:20px auto; display:block; cursor: pointer;">
+</div>
 </form>
+</div>
+    <div id="form-footer">
+		<p>© 2021 Intersection Master - Sebastian Jarosz, Bartłomiej Biegun</p>
+		<p>WSB Chorzów</p>
+	</div>
+</div>
