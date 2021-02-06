@@ -107,9 +107,9 @@ def is_point_on_segment(point, segment):
     dot_segment_vector = np.dot(segment_vector, segment_vector)
 
     # True - there is intersection
-    return (0 < dot_segment_vector_and_points_vector < dot_segment_vector) or \
-           np.array_equal(point, segment.get_first_point()) or\
-           np.array_equal(point, segment.get_second_point())
+    # Cross product == 0 need to be checked to know if both vectors are collinear - if not there is no intersection
+    return np.cross(points_vector, segment_vector) == 0 and not \
+        (dot_segment_vector_and_points_vector < 0 and dot_segment_vector > dot_segment_vector_and_points_vector)
 
 
 # Calculate t scalar parameter
@@ -174,7 +174,8 @@ def get_intersection_segment_from_points(all_points):
     int_segment_points = []
     # From all points get only points which are not matching MIN_coordinate, MAX_coordinate
     for point in all_points:
-        if not (np.array_equal(point, point_min_checked_coordinate) or np.array_equal(point, point_max_checked_coordinate)):
+        if not (np.array_equal(point, point_min_checked_coordinate) or np.array_equal(point,
+                                                                                      point_max_checked_coordinate)):
             int_segment_points.append(point)
 
     # Special Case - Both segments are equal
@@ -183,7 +184,8 @@ def get_intersection_segment_from_points(all_points):
     # Special Case - Beginning or Ending of both segments are equal
     elif len(int_segment_points) == 1:
         coordinate_value = int_segment_points[0][coordinate_to_check]
-        int_segment_points.append(point_min_checked_coordinate if coordinate_value > point_min_checked_coordinate[coordinate_to_check] else point_max_checked_coordinate)
+        int_segment_points.append(point_min_checked_coordinate if coordinate_value > point_min_checked_coordinate[
+            coordinate_to_check] else point_max_checked_coordinate)
 
     return int_segment_points
 
@@ -215,4 +217,3 @@ def print_debug_data(vector_ab, vector_cd, cross_ab_cd, t, u):
     print("Cross AB x CD: " + str(cross_ab_cd))
     print("t = " + str(t))
     print("u = " + str(u))
-
