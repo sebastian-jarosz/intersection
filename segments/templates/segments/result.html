@@ -79,7 +79,7 @@ h2, h3 {
         <canvas id="resultChart" width="500" height="500"></canvas>
 
     <script type="application/javascript" src="https://code.jquery.com/jquery-1.10.0.min.js"></script>
-    <script type="application/javascript" src="{% static 'js/Chart.min.js' %}"></script>
+    <script type="application/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
     <script type="text/javascript">
         $.get('{% url "segments:result_json" pk %}', function(data) {
             var ctx = $("#resultChart").get(0).getContext("2d");
