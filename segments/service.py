@@ -107,7 +107,9 @@ def is_point_on_segment(point, segment):
     dot_segment_vector = np.dot(segment_vector, segment_vector)
 
     # True - there is intersection
-    return 0 <= dot_segment_vector_and_points_vector <= dot_segment_vector
+    return (0 < dot_segment_vector_and_points_vector < dot_segment_vector) or \
+           np.array_equal(point, segment.get_first_point()) or\
+           np.array_equal(point, segment.get_second_point())
 
 
 # Calculate t scalar parameter
